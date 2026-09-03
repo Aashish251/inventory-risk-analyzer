@@ -88,9 +88,12 @@ export function deduplicateEvents(events: InventoryEvent[]): { events: Inventory
 export function groupBySku(events: InventoryEvent[]): Map<string, InventoryEvent[]> {
   const map = new Map<string, InventoryEvent[]>();
   for (const e of events) {
-    const list = map.get(e.sku) ?? [];
+    let list = map.get(e.sku);
+    if (!list) {
+      list = [];
+      map.set(e.sku, list);
+    }
     list.push(e);
-    map.set(e.sku, list);
   }
   return map;
 }
@@ -107,8 +110,19 @@ const TYPE_TIE_BREAK: Record<string, number> = {
 };
 
 function sortChronologically(events: InventoryEvent[]): InventoryEvent[] {
+  // Cache parsed timestamps to avoid repeated Date.parse calls during sort comparisons.
+  const tsCache = new Map<string, number>();
+  const getTs = (iso: string): number => {
+    let v = tsCache.get(iso);
+    if (v === undefined) {
+      v = Date.parse(iso);
+      tsCache.set(iso, v);
+    }
+    return v;
+  };
+
   return [...events].sort((a, b) => {
-    const diff = Date.parse(a.timestamp) - Date.parse(b.timestamp);
+    const diff = getTs(a.timestamp) - getTs(b.timestamp);
     if (diff !== 0) return diff;
     return (TYPE_TIE_BREAK[a.type] ?? 9) - (TYPE_TIE_BREAK[b.type] ?? 9);
   });
@@ -133,11 +147,7 @@ export function processSkuLedger(sku: string, events: InventoryEvent[], starting
   for (const e of sorted) {
     switch (e.type) {
       case 'restock':
-        running += e.quantity;
-        break;
       case 'return':
-        running += e.quantity;
-        break;
       case 'adjustment':
         running += e.quantity;
         break;
