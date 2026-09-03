@@ -1,0 +1,17 @@
+{
+  "name": "inventory-risk-analyzer",
+  "version": "1.0.0",
+  "description": "Identifies inventory items at risk of stocking out before replenishment arrives, and recommends what to reorder first.",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/main.ts",
+    "build": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  }
+}

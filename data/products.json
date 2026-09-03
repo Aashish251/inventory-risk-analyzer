@@ -1,0 +1,7 @@
+[
+  { "sku": "SKU-001", "primaryChannel": "Shopify", "unitCost": 25, "startingInventory": 230 },
+  { "sku": "SKU-002", "primaryChannel": "Amazon", "unitCost": 120, "startingInventory": 200 },
+  { "sku": "SKU-003", "primaryChannel": "Amazon", "unitCost": 75, "startingInventory": 400 },
+  { "sku": "SKU-004", "primaryChannel": "Flipkart", "unitCost": 95, "startingInventory": 60 },
+  { "sku": "SKU-005", "primaryChannel": "Shopify", "unitCost": 160, "startingInventory": 100 }
+]
